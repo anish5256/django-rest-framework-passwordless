@@ -247,6 +247,13 @@ class CallbackTokenAuthSerializer(AbstractBaseCallbackTokenSerializer):
             msg = _('Invalid alias parameters provided.')
             raise serializers.ValidationError(msg)
 
+    def to_internal_value(self, data):
+        device_type = data.get('device_type', None)
+        if device_type and device_type not in dict(Token.DEVICE_TYPES).keys():
+            del data['device_type']
+
+        return super().to_internal_value(data)
+
 
 class CallbackTokenVerificationSerializer(AbstractBaseCallbackTokenSerializer):
     """
